@@ -1,0 +1,33 @@
+---
+- hosts: all
+
+  vars:
+    username: "opencrs"
+    hostname: "opencrs"
+
+  tasks:
+
+  - name: Install Docker
+    import_tasks: docker-install.yml
+
+  - name: Add specified repository into sources list
+    ansible.builtin.apt_repository:
+      repo: ppa:deadsnakes/ppa
+      state: present
+    become: yes
+
+  - name: Install the toolchain
+    apt:
+      name: ['python3.12', 'python3.12-dev']
+      state: present
+    become: yes
+
+  - name: Add dataset
+    import_tasks: dataset.yml
+
+  - name: Add attack surfece approximation
+    import_tasks: attack-surface-approx.yml
+
+  - name: Add vulnerability detection
+    import_tasks: vulnerability_detection.yml
+
